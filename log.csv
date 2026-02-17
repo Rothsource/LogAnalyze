@@ -1,0 +1,16 @@
+log_id,timestamp,user_id,username,email,action,status,ip_address,device_type,browser,os,session_id,failure_reason,location
+1,2024-01-15 08:23:11,USR001,john.doe,john.doe@example.com,LOGIN,SUCCESS,192.168.1.10,Desktop,Chrome 120,Windows 11,SESS-A1B2C3,,New York US
+2,2024-01-15 08:45:32,USR002,jane.smith,jane.smith@example.com,LOGIN,FAILED,203.45.67.89,Mobile,Safari 17,iOS 17,,,Invalid Password,London UK
+3,2024-01-15 08:45:55,USR002,jane.smith,jane.smith@example.com,LOGIN,FAILED,203.45.67.89,Mobile,Safari 17,iOS 17,,,Invalid Password,London UK
+4,2024-01-15 08:46:20,USR002,jane.smith,jane.smith@example.com,LOGIN,SUCCESS,203.45.67.89,Mobile,Safari 17,iOS 17,SESS-D4E5F6,,London UK
+5,2024-01-15 09:10:05,USR003,bob.wilson,bob.wilson@example.com,LOGIN,FAILED,45.33.32.156,Desktop,Firefox 121,Ubuntu 22,,,Account Locked,Unknown
+6,2024-01-15 09:15:44,USR004,alice.jones,alice.jones@example.com,LOGIN,SUCCESS,10.0.0.25,Desktop,Edge 120,Windows 10,SESS-G7H8I9,,Chicago US
+7,2024-01-15 10:02:18,USR001,john.doe,john.doe@example.com,LOGOUT,SUCCESS,192.168.1.10,Desktop,Chrome 120,Windows 11,SESS-A1B2C3,,New York US
+8,2024-01-15 10:30:59,USR005,carol.white,carol.white@example.com,LOGIN,SUCCESS,172.16.0.5,Tablet,Chrome 120,Android 14,SESS-J1K2L3,,Toronto CA
+9,2024-01-15 11:05:33,USR006,david.brown,david.brown@example.com,LOGIN,FAILED,198.51.100.22,Desktop,Chrome 119,macOS 14,,,Expired Password,Sydney AU
+10,2024-01-15 11:06:01,USR006,david.brown,david.brown@example.com,PASSWORD_RESET,SUCCESS,198.51.100.22,Desktop,Chrome 119,macOS 14,,,, Sydney AU
+11,2024-01-15 11:07:45,USR006,david.brown,david.brown@example.com,LOGIN,SUCCESS,198.51.100.22,Desktop,Chrome 119,macOS 14,SESS-M4N5O6,,Sydney AU
+12,2024-01-15 12:00:00,USR007,eve.taylor,eve.taylor@example.com,LOGIN,FAILED,185.220.101.47,Desktop,Chrome 118,Windows 10,,,MFA Failed,Moscow RU
+13,2024-01-15 12:00:15,USR007,eve.taylor,eve.taylor@example.com,LOGIN,FAILED,185.220.101.47,Desktop,Chrome 118,Windows 10,,,MFA Failed,Moscow RU
+14,2024-01-15 12:00:30,USR007,eve.taylor,eve.taylor@example.com,LOGIN,BLOCKED,185.220.101.47,Desktop,Chrome 118,Windows 10,,,Too Many Attempts,Moscow RU
+15,2024-01-15 13:22:47,USR004,alice.jones,alice.jones@example.com,LOGOUT,SUCCESS,10.0.0.25,Desktop,Edge 120,Windows 10,SESS-G7H8I9,,Chicago US

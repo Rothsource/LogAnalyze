@@ -1,0 +1,84 @@
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T08:05:12Z",
+  "status": "SUCCESS",
+  "user_id": "u1001",
+  "ip_address": "192.168.1.10"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T08:07:44Z",
+  "status": "FAILED",
+  "user_id": "u1002",
+  "ip_address": "192.168.1.11"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T08:15:30Z",
+  "status": "SUCCESS",
+  "user_id": "u1003",
+  "ip_address": "10.0.0.5"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T08:22:18Z",
+  "status": "FAILED",
+  "user_id": "u1004",
+  "ip_address": "10.0.0.8"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T08:40:02Z",
+  "status": "SUCCESS",
+  "user_id": "u1005",
+  "ip_address": "172.16.0.14"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T09:01:55Z",
+  "status": "SUCCESS",
+  "user_id": "u1006",
+  "ip_address": "203.0.113.7"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T09:14:09Z",
+  "status": "FAILED",
+  "user_id": "u1007",
+  "ip_address": "203.0.113.9"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T09:33:41Z",
+  "status": "SUCCESS",
+  "user_id": "u1008",
+  "ip_address": "198.51.100.22"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T09:50:27Z",
+  "status": "FAILED",
+  "user_id": "u1009",
+  "ip_address": "198.51.100.30"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T10:05:39Z",
+  "status": "SUCCESS",
+  "user_id": "u1010",
+  "ip_address": "172.16.0.21"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T10:21:14Z",
+  "status": "SUCCESS",
+  "user_id": "u1011",
+  "ip_address": "172.16.0.25"
+}
+{
+  "event_type": "USER_LOGIN",
+  "timestamp": "2026-02-17T10:42:15Z",
+  "status": "SUCCESS",
+  "user_id": "u1012",
+  "ip_address": "192.168.1.15"
+}
