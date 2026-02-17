@@ -1,8 +1,9 @@
 import json
-from Calulate.Filter_ip                        import prepare_logs
-from Calulate.totalAttempt_totalFailSuccess    import summarize_logs
-from Calulate.threat_level                     import analyze_bruteforce
+from Calulate.Filter_ip import prepare_logs
+from Calulate.totalAttempt_totalFailSuccess import summarize_logs
+from Calulate.threat_level import analyze_bruteforce
 from analyze.pieChart import create_pie_chart, create_bruteforce_chart
+from analyze.graph import create_line_graph
 
 file = 'log.csv'
 
@@ -10,8 +11,10 @@ result = prepare_logs(file)
 
 summary    = summarize_logs(result)
 # create_pie_chart(summary)
-bruteforce = analyze_bruteforce(result)
-create_bruteforce_chart(bruteforce)
+# bruteforce = analyze_bruteforce(result)
+# create_bruteforce_chart(bruteforce)
+
+create_line_graph(result)
 
 # unified = {}
 # all_ips = set(summary.keys()) | set(bruteforce.keys())
