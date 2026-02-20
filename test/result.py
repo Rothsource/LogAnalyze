@@ -2,8 +2,8 @@ import json
 from Calulate.Filter_ip import prepare_logs
 from Calulate.totalAttempt_totalFailSuccess import summarize_logs
 from Calulate.threat_level import analyze_bruteforce
-from analyze.pieChart import create_pie_chart, create_bruteforce_chart
-from analyze.graph import create_line_graph
+from pieChart import create_pie_chart, create_bruteforce_chart
+from graph import create_line_graph
 
 file = 'log.csv'
 

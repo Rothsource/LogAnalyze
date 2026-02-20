@@ -33,7 +33,7 @@ def analyze_bruteforce(normalized_data):
     username_col  = reverse_map.get('username')
 
     if not ip_col or not status_col:
-        print("⚠️  Could not find IP or status column")
+        print("Could not find IP or status column")
         return {}
 
     # Group by IP
