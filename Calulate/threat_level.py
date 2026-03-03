@@ -1,6 +1,12 @@
+"""
+Brute-Force Attack Analysis Module
+Analyzes login patterns to detect potential brute-force attacks
+"""
+
 from datetime import datetime
 
 TIMESTAMP_FORMATS = [
+    "%Y-%m-%d %H:%M:%S.%f",  # Microseconds support
     "%Y-%m-%d %H:%M:%S",
     "%Y/%m/%d %H:%M:%S",
     "%d/%m/%Y %H:%M:%S",
@@ -9,6 +15,7 @@ TIMESTAMP_FORMATS = [
 ]
 
 def parse_timestamp(ts_str):
+    """Parse timestamp string to datetime object"""
     for fmt in TIMESTAMP_FORMATS:
         try:
             return datetime.strptime(ts_str.strip(), fmt)
@@ -16,15 +23,35 @@ def parse_timestamp(ts_str):
             continue
     return None
 
-def get_status(score):
-    if score >= 0.6:
+
+def get_status(likelihood):
+    """
+    Determine threat level based on likelihood percentage
+    
+    Args:
+        likelihood: Brute-force likelihood (0-100)
+    
+    Returns:
+        'CRITICAL', 'SUSPICIOUS', or 'NORMAL'
+    """
+    if likelihood >= 70:
         return "CRITICAL"
-    elif score >= 0.3:
+    elif likelihood >= 40:
         return "SUSPICIOUS"
     else:
         return "NORMAL"
 
+
 def analyze_bruteforce(normalized_data):
+    """
+    Analyze login attempts to detect brute-force attacks
+    
+    Args:
+        normalized_data: Tuple of (extracted_data, reverse_map)
+    
+    Returns:
+        Dictionary with IP addresses as keys and analysis results as values
+    """
     extracted, reverse_map = normalized_data
 
     ip_col        = reverse_map.get('ip')
@@ -71,7 +98,7 @@ def analyze_bruteforce(normalized_data):
                 timeline_entry["username"] = username
             ip_data[ip]['timeline'].append(timeline_entry)
 
-    # Calculate score and build result
+    # Calculate likelihood and build result
     result = {}
     for ip, data in ip_data.items():
         total   = data['total']
@@ -79,32 +106,107 @@ def analyze_bruteforce(normalized_data):
         success = data['success']
         times   = sorted(data['timestamps'])
 
-        # Factor 1 - Failed Rate
-        failed_rate = failed / total if total > 0 else 0.0
-
-        # Factor 2 - Frequency per minute
-        frequency = 0.0
+        # ========================================
+        # CALCULATE ATTEMPTS PER SECOND
+        # ========================================
+        
+        attempts_per_second = 0.0
+        
         if len(times) >= 2:
-            duration_minutes = (times[-1] - times[0]).total_seconds() / 60
-            frequency = total / duration_minutes if duration_minutes > 0 else float(total)
+            duration_seconds = (times[-1] - times[0]).total_seconds()
+            
+            if duration_seconds > 0:
+                # Normal case: Calculate rate
+                attempts_per_second = total / duration_seconds
+            else:
+                # All attempts in same second (duration = 0)
+                attempts_per_second = float(total)
+        
+        # Round to 2 decimal places
+        attempts_per_second = round(attempts_per_second, 2)
 
-        frequency_normalized = min(frequency / 10, 1.0)
-
-        # Factor 3 - Success after many fails
-        success_after_fail = 1.0 if (failed >= 5 and success >= 1) else 0.0
-
-        score = (
-            failed_rate          * 0.4 +
-            frequency_normalized * 0.4 +
-            success_after_fail   * 0.2
+        # ========================================
+        # LIKELIHOOD CALCULATION
+        # ========================================
+        
+        likelihood = 0
+        
+        # Factor 1: Failed Attempts Count (40% weight)
+        if failed >= 15:
+            failed_score = 100
+        elif failed >= 10:
+            failed_score = 85
+        elif failed >= 5:
+            failed_score = 60
+        elif failed >= 3:
+            failed_score = 35
+        elif failed >= 2:
+            failed_score = 15
+        else:
+            failed_score = 5
+        
+        # Factor 2: Failure Rate (30% weight)
+        failure_rate = (failed / total * 100) if total > 0 else 0
+        
+        if failure_rate >= 90:
+            rate_score = 100
+        elif failure_rate >= 70:
+            rate_score = 75
+        elif failure_rate >= 50:
+            rate_score = 50
+        else:
+            rate_score = failure_rate / 2
+        
+        # Factor 3: Attempt Frequency (20% weight)
+        frequency_score = 0
+        if len(times) >= 2:
+            duration_seconds = (times[-1] - times[0]).total_seconds()
+            if duration_seconds > 0:
+                calc_attempts_per_second = total / duration_seconds
+                
+                if calc_attempts_per_second >= 1:
+                    frequency_score = 100
+                elif calc_attempts_per_second >= 0.5:
+                    frequency_score = 80
+                elif calc_attempts_per_second >= 0.1:
+                    frequency_score = 50
+                else:
+                    frequency_score = 20
+            else:
+                frequency_score = 100
+        
+        # Factor 4: Success After Failures (10% weight)
+        success_after_fail_score = 0
+        if failed >= 5 and success >= 1:
+            success_after_fail_score = 100
+        elif failed >= 3 and success >= 1:
+            success_after_fail_score = 50
+        
+        # Weighted calculation
+        likelihood = (
+            failed_score              * 0.40 +
+            rate_score                * 0.30 +
+            frequency_score           * 0.20 +
+            success_after_fail_score  * 0.10
         )
+        
+        # Round to 1 decimal place
+        likelihood = round(likelihood, 1)
+        
+        # Ensure within bounds
+        likelihood = min(max(likelihood, 0), 100)
+
+        # ========================================
+        # BUILD RESULT
+        # ========================================
 
         result[ip] = {
-            "first_seen"        : str(times[0])  if times else 'Unknown',
-            "last_seen"         : str(times[-1]) if times else 'Unknown',
-            "threat_level"      : get_status(score),
-            "likelihood"        : str(round(score * 100, 1)),
-            "attempts_timeline" : data['timeline']
+            "first_seen"         : str(times[0])  if times else 'Unknown',
+            "last_seen"          : str(times[-1]) if times else 'Unknown',
+            "threat_level"       : get_status(likelihood),
+            "likelihood"         : str(likelihood),
+            "attempts_per_second": attempts_per_second,  # ← NEW FIELD
+            "attempts_timeline"  : data['timeline']
         }
 
-    return result  
+    return result

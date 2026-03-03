@@ -266,7 +266,7 @@ class LogAnalyzerUI:
         
         upload_text = tk.Label(
             upload_frame,
-            text="Upload file (JSON, CSV, TXT)",
+            text="Upload file (JSON, CSV)",
             font=("Arial", 14),  
             fg="#7a8ba3",
             bg="#0f2337"

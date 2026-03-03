@@ -8,12 +8,6 @@ import matplotlib.dates as mdates
 
 class DetailPage:
     def __init__(self, parent_frame, data, result, bruteforce_data, go_back_callback):
-        """
-        data: single IP data dict with {ip, total, failed, success, os, threat_level}
-        result: (extracted, reverse_map) from prepare_logs
-        bruteforce_data: data from analyze_bruteforce for this IP
-        go_back_callback: function to call when back button is pressed
-        """
         self.parent_frame = parent_frame
         self.data = data
         self.extracted, self.reverse_map = result
@@ -109,7 +103,6 @@ class DetailPage:
         self.create_bruteforce_pie_chart(bottom_frame)
     
     def create_line_graph(self, parent):
-        """Create timeline graph using data from prepare_logs"""
         
         # Get data for this specific IP
         ip_col = self.reverse_map.get('ip')
@@ -193,7 +186,6 @@ class DetailPage:
         canvas.get_tk_widget().pack(fill="both", expand=True, padx=10, pady=10)
     
     def create_ip_info_section(self, parent):
-        """Left section with IP details from prepare_logs result"""
         
         info_frame = tk.Frame(parent, bg="#0f2337", highlightbackground="#1e3a5f", highlightthickness=2)
         info_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
@@ -262,7 +254,6 @@ class DetailPage:
             ).pack(side="left", padx=(5, 0))
     
     def create_attempt_pie_chart(self, parent):
-        """Middle section - uses data from summarize_logs"""
         
         chart_frame = tk.Frame(parent, bg="#0f2337", highlightbackground="#1e3a5f", highlightthickness=2)
         chart_frame.grid(row=0, column=1, sticky="nsew", padx=5)
@@ -316,7 +307,6 @@ class DetailPage:
         canvas.get_tk_widget().pack(fill="both", expand=True, padx=10, pady=10)
     
     def create_bruteforce_pie_chart(self, parent):
-        """Right section - uses data from analyze_bruteforce"""
         
         chart_frame = tk.Frame(parent, bg="#0f2337", highlightbackground="#1e3a5f", highlightthickness=2)
         chart_frame.grid(row=0, column=2, sticky="nsew", padx=(10, 0))
@@ -325,11 +315,15 @@ class DetailPage:
         threat_level = self.data['threat_level']
         likelihood = float(self.bruteforce_data.get('likelihood', 10)) if self.bruteforce_data else 10
         
+        # ✅ NEW: Get attempts per second
+        attempts_per_sec = self.bruteforce_data.get('attempts_per_second', 0) if self.bruteforce_data else 0
+        
         # Title
         header = tk.Frame(chart_frame, bg="#0f2337")
         header.pack(fill="x", padx=20, pady=(20, 10))
         
-        stats_text = f"Brute Force: {likelihood}%\nNormal: {100-likelihood:.1f}%\nStatus: {threat_level}"
+        # ✅ MODIFIED: Add attempts per second to stats
+        stats_text = f"Brute Force: {likelihood}%\nSpeed: {attempts_per_sec} /sec\nStatus: {threat_level}"
         
         tk.Label(
             header,
